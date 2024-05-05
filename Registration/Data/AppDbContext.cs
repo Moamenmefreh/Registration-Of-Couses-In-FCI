@@ -30,7 +30,7 @@ namespace Registration.Data
         public DbSet<Department>? Departments { get; set; }
         public DbSet<PreRequistes>? PreRequistes { get; set; }
         public DbSet<RegistrationStudent>? RegistrationStudent { get; set; }
-
+        public DbSet<ActiveCourses>? ActiveCourses { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);

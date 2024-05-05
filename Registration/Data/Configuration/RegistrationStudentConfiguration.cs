@@ -9,7 +9,7 @@ namespace Registration.Data.Configuration
         public void Configure(EntityTypeBuilder<RegistrationStudent> builder)
         {
             builder.HasKey(x => x.StudentId);
-            builder.Property(x=>x.StudentId).ValueGeneratedNever();
+            builder.Property(x=>x.StudentId).ValueGeneratedNever().HasMaxLength(255);
 
             builder.Property(x => x.Course1).HasColumnType("nvarchar").HasMaxLength(255);
             builder.Property(x => x.Course2).HasColumnType("nvarchar").HasMaxLength(255);
@@ -19,6 +19,7 @@ namespace Registration.Data.Configuration
             builder.Property(x => x.Course6).HasColumnType("nvarchar").HasMaxLength(255);
             builder.Property(x => x.Course7).HasColumnType("nvarchar").HasMaxLength(255);
             builder.Property(x => x.Course8).HasColumnType("nvarchar").HasMaxLength(255);
+            builder.Property(x => x.RecordedHours).HasColumnType("int");
             builder.HasMany(e => e.students)
                 .WithOne(e => e.RegistrationStudent)
                 .HasForeignKey(e => e.StudentId)

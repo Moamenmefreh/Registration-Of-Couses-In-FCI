@@ -16,7 +16,7 @@
         public Level3 Level3 { get; set; }
         public Level4 Level4 { get; set; }
         public PreRequistes PreRequistes { get;set; }
-
+        public ActiveCourses ActiveCourses { get; set; }
         public ICollection<Department> Departments { get; set; }
     }
 }

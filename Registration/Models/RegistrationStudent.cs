@@ -1,4 +1,8 @@
-﻿namespace Registration.Models
+﻿
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
+
+namespace Registration.Models
 {
     public class RegistrationStudent
     {
@@ -11,7 +15,11 @@
         public string? Course6 { get; set; }
         public string? Course7 { get; set; }
         public string? Course8 { get; set; }
-
+        
+        public int RecordedHours { get; set; }
+        [JsonIgnore]
+        [IgnoreDataMember]
         public ICollection<Students> students { get; set; }= new List<Students>();
+
     }
 }

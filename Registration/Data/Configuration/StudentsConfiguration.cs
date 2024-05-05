@@ -9,7 +9,7 @@ namespace Registration.Data.Configuration
         public void Configure(EntityTypeBuilder<Students> builder)
         {
             builder.HasKey(x => x.StudentId);
-            builder.Property(x=>x.StudentId).ValueGeneratedNever();
+            builder.Property(x=>x.StudentId).ValueGeneratedNever().HasMaxLength(255);
 
             builder.Property(x=>x.StudentPassword).IsRequired()
                 .HasColumnType("nvarchar").HasMaxLength(128);

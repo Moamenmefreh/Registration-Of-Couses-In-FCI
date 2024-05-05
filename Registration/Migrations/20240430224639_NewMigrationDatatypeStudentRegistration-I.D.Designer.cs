@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Registration.Data;
 
@@ -10,9 +11,11 @@ using Registration.Data;
 namespace Registration.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240430224639_NewMigrationDatatypeStudentRegistration-I.D")]
+    partial class NewMigrationDatatypeStudentRegistrationID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -305,9 +308,6 @@ namespace Registration.Migrations
                     b.Property<string>("Course8")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar");
-
-                    b.Property<int>("RecordedHours")
-                        .HasColumnType("int");
 
                     b.HasKey("StudentId");
 

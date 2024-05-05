@@ -6,7 +6,7 @@
         public string? DepartmentName { get; set; }
         public float DepartmentGPA { get; set; }
 
-        public ICollection<Students>? Students {get;set;}
+        public ICollection<Students> Students { get; set; } = null;
 
         public ICollection<Courses> Courses { get;set;}
     }

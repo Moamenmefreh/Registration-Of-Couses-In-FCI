@@ -150,7 +150,7 @@ namespace RegistrationSystem.Controllers
 
                 });
 
-
+                
                 if (Level == 1)
                 {
                     foreach (var item in courseff)
@@ -160,8 +160,8 @@ namespace RegistrationSystem.Controllers
                             CourseCode1 = item.CourseCode,
                             CourseHoures = item.CourseHoures,
                             Level1Id = item.LevelId,
-                            SemsterId=item.SemsterId,
-                            CourseName=item.CourseName
+                            SemsterId = item.SemsterId,
+                            CourseName = item.CourseName
                         }
                         ;
 
@@ -184,7 +184,7 @@ namespace RegistrationSystem.Controllers
                             SemsterId = item.SemsterId,
                             CourseName = item.CourseName
                         };
-                        
+
                         dbcontext.Level2.Add(distention);
                         dbcontext.SaveChanges();
                     }
@@ -205,9 +205,9 @@ namespace RegistrationSystem.Controllers
                             SemsterId = item.SemsterId,
                             CourseName = item.CourseName
                         };
-                       
-                            dbcontext.Level3.Add(distention);
-                        
+
+                        dbcontext.Level3.Add(distention);
+
                         dbcontext.SaveChanges();
 
                     }
@@ -228,9 +228,9 @@ namespace RegistrationSystem.Controllers
                             CourseName = item.CourseName
 
                         };
-                        
-                            dbcontext.Level4.Add(distention);
-                        
+
+                        dbcontext.Level4.Add(distention);
+
                         dbcontext.SaveChanges();
                     }
 
@@ -280,7 +280,7 @@ namespace RegistrationSystem.Controllers
         public async Task<IActionResult> GetAllCoursesActiveinSemster(int SemsterId, int Level)
         {
             var CoursesActive = await dbcontext.Courses.Where(x => x.LevelId == Level).ToListAsync();
-            var CoursesActiveInSemster= CoursesActive.Where(x=>x.SemsterId == SemsterId).ToList();
+            var CoursesActiveInSemster = CoursesActive.Where(x => x.SemsterId == SemsterId).ToList();
             if (CoursesActive != null)
             {
 
@@ -311,9 +311,9 @@ namespace RegistrationSystem.Controllers
                                 CourseName = course.CourseName,
                                 SemsterId = course.SemsterId
                             };
-                            
-                                dbcontext.Semster1.Add(semster1);
-                            
+
+                            dbcontext.Semster1.Add(semster1);
+
                             dbcontext.SaveChanges();
 
                         }
@@ -331,9 +331,9 @@ namespace RegistrationSystem.Controllers
                                 CourseName = course.CourseName,
                                 SemsterId = course.SemsterId
                             };
-                           
-                                dbcontext.Semster2.Add(semster2);
-                            
+
+                            dbcontext.Semster2.Add(semster2);
+
                             dbcontext.SaveChanges();
 
                         }
@@ -361,11 +361,11 @@ namespace RegistrationSystem.Controllers
                                 CourseName = course.CourseName,
                                 SemsterId = course.SemsterId
                             };
-                           
-                                dbcontext.Semster3.Add(semster);
-                            
+
+                            dbcontext.Semster3.Add(semster);
+
                             dbcontext.SaveChanges();
-                            
+
                         }
                         return Ok("Add Courses In  SEMSTER SUCCEFULLY");
                     }
@@ -381,9 +381,9 @@ namespace RegistrationSystem.Controllers
                                 CourseName = course.CourseName,
                                 SemsterId = course.SemsterId
                             };
-                           
-                                dbcontext.Semster4.Add(semster);
-                          
+
+                            dbcontext.Semster4.Add(semster);
+
                             dbcontext.SaveChanges();
 
                         }
@@ -409,15 +409,15 @@ namespace RegistrationSystem.Controllers
                                 CourseName = course.CourseName,
                                 SemsterId = course.SemsterId
                             };
-                           
-                                dbcontext.Semster5.Add(semster);
-                            
+
+                            dbcontext.Semster5.Add(semster);
+
                             dbcontext.SaveChanges();
 
                         }
                         return Ok("Add Courses In  SEMSTER SUCCEFULLY");
                     }
-                    else if (SemsterId ==2)
+                    else if (SemsterId == 2)
                     {
                         foreach (var course in courseff)
                         {
@@ -429,9 +429,9 @@ namespace RegistrationSystem.Controllers
                                 CourseName = course.CourseName,
                                 SemsterId = course.SemsterId
                             };
-                            
-                                dbcontext.Semster6.Add(semster);
-                          
+
+                            dbcontext.Semster6.Add(semster);
+
                             dbcontext.SaveChanges();
 
                         }
@@ -509,7 +509,186 @@ namespace RegistrationSystem.Controllers
                 return BadRequest("There IS Not this Level ");
             }
         }
+        [HttpGet("Get All Courses")]
 
+        public async Task<IActionResult> GetAllCourses()
+        {
+
+            var Courses = await dbcontext.Courses.Where(x => x.CourseCode != null).ToListAsync();
+            var CoursesFromTBCourses = Courses.Select(x => new
+            {
+                x.CourseCode,
+                x.CourseHoures,
+                x.CourseName
+
+            });
+
+            return Ok(Courses);
+
+        }
+
+        //Active courses in Level
+
+        [HttpPost("Activecourses In Table Active Courses")]
+
+        public async Task<IActionResult> ActiveCourses(string CourseCode)
+        {
+            var CourseCodeInTbCourses = await dbcontext.Courses
+                .Where(x => x.CourseCode == CourseCode).ToListAsync();
+
+            var CourseCodeDetails = CourseCodeInTbCourses.Select(x => new
+            {
+                x.CourseCode,
+                x.CourseHoures,
+                x.CourseName
+
+            }).ToList();
+
+            var CourseCodeInTbActiveCours = await dbcontext.ActiveCourses.SingleOrDefaultAsync(x => x.CourseCode == CourseCode); ;
+            if (CourseCodeInTbActiveCours == null)
+            {
+                foreach (var course in CourseCodeDetails)
+                {
+                    ActiveCourses activeCourses = new ActiveCourses()
+                    {
+
+                        CourseCode = course.CourseCode,
+                        CourseName = course.CourseName,
+                        CourseHours = course.CourseHoures
+                    };
+                    dbcontext.ActiveCourses.Add(activeCourses);
+
+                }
+
+                dbcontext.SaveChanges();
+                return Ok("Add Courses In Active Courses Successfully");
+            }
+            else
+            {
+                return BadRequest("Sorry This Courses Existing In Active Courses");
+            }
+
+        }
+
+
+        //Add Active Courses In Level
+
+
+        [HttpPost("Activecourses In Level")]
+
+        public async Task<IActionResult> ActiveCoursesInLevel(string CourseCode, int LevelId)
+        {
+            var CourseCodeInTbActiveCourse = await dbcontext.ActiveCourses
+                .Where(x => x.CourseCode == CourseCode).ToListAsync();
+
+            var CourseCodeDetails = CourseCodeInTbActiveCourse.Select(x => new
+            {
+                x.CourseCode,
+                x.CourseHours,
+                x.CourseName
+
+            }).ToList();
+
+            
+            if (CourseCodeInTbActiveCourse != null)
+            {
+
+                if (LevelId == 1)
+                {
+
+                      foreach (var course in CourseCodeDetails)
+                        {
+                            Level1 activeCourses = new Level1()
+                            {
+
+                                CourseCode1 = course.CourseCode,
+                                CourseName = course.CourseName,
+                                CourseHoures = course.CourseHours
+                            };
+                            dbcontext.Level1.Add(activeCourses);
+                            dbcontext.SaveChanges();
+                        }
+                        dbcontext.SaveChanges();
+
+                        return Ok("Add Courses In Active Courses Successfully");
+                  
+                }
+
+
+
+                else if (LevelId == 2)
+                {
+                   
+                        foreach (var course in CourseCodeDetails)
+                        {
+                            Level2 activeCourses = new Level2()
+                            {
+
+                                CourseCode2 = course.CourseCode,
+                                CourseName = course.CourseName,
+                                CourseHoures = course.CourseHours
+                            };
+                            dbcontext.Level2.Add(activeCourses);
+                            dbcontext.SaveChanges();
+                        }
+                        dbcontext.SaveChanges();
+                        return Ok("Add Courses In Active Courses Successfully");
+
+                  
+
+                }
+                else if (LevelId == 3)
+                {
+                    foreach (var course in CourseCodeDetails)
+                    {
+                        Level3 activeCourses = new Level3()
+                        {
+
+                            CourseCode3 = course.CourseCode,
+                            CourseName = course.CourseName,
+                            CourseHoures = course.CourseHours
+                        };
+                        dbcontext.Level3.Add(activeCourses);
+                        dbcontext.SaveChanges();
+                    }
+                    dbcontext.SaveChanges();
+                    return Ok("Add Courses In Active Courses Successfully");
+                }
+
+                else if (LevelId == 4)
+                {
+
+                    foreach (var course in CourseCodeDetails)
+                    {
+                        Level4 activeCourses = new Level4()
+                        {
+
+                            CourseCode4 = course.CourseCode,
+                            CourseName = course.CourseName,
+                            CourseHoures = course.CourseHours
+                        };
+                        dbcontext.Level4.Add(activeCourses);
+                        dbcontext.SaveChanges();
+                    }
+                    dbcontext.SaveChanges();
+
+                    return Ok("Add Courses In Active Courses Successfully");
+                }
+
+                else
+                {
+                    return BadRequest($"Sorry There Is Not Level {LevelId}");
+                }
+            }
+            else
+            {
+                return BadRequest("Sorry Course Not Active ");
+            }
+
+           
+
+        }
+        
     }
 }
 
