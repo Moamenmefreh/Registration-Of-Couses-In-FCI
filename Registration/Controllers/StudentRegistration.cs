@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Registration.Data;
@@ -8,6 +10,8 @@ using System.Linq;
 
 namespace Registration.Controllers
 {
+    [Authorize(Roles = "Student")]
+   
     [Route("api/[controller]")]
     [ApiController]
     public class StudentRegistration : ControllerBase
@@ -20,28 +24,27 @@ namespace Registration.Controllers
                    }
 
        
-        [HttpPost("Register For Student")]
+        [HttpPost("Register For Student{id}")]
 
-        public async Task<IActionResult> Registration([FromForm] DtoRegistrationStudent dtoRegistrationStudent)
+        public async Task<IActionResult> Registration(string id,[FromBody] DtoRegistrationStudent dtoRegistrationStudent)
         {
 
            
             var CourseCodePre = await dbcontext.PreRequistes.SingleOrDefaultAsync(x => x.CourseCode == dtoRegistrationStudent.CourseCode);
-            var StudentRegistration = await dbcontext.RegistrationStudent.SingleOrDefaultAsync(x => x.StudentId == dtoRegistrationStudent.StudentID);
+            var StudentRegistration = await dbcontext.RegistrationStudent.SingleOrDefaultAsync(x => x.StudentId == id);
 
           var course=await dbcontext.Courses.SingleOrDefaultAsync(x=>x.CourseCode== dtoRegistrationStudent.CourseCode);
            
             
             var student = await dbcontext.student
-                      .SingleOrDefaultAsync(x => x.StudentId == dtoRegistrationStudent.StudentID);
+                      .SingleOrDefaultAsync(x => x.StudentId == id);
             
             
             
             if (CourseCodePre.CourseCode1 == null &&
             CourseCodePre.CourseCode2 == null
             && CourseCodePre.CourseCode3 == null
-            &&StudentRegistration.StudentId==dtoRegistrationStudent.StudentID            
-            )
+            &&StudentRegistration.StudentId==id)
                 {
                
 
@@ -176,19 +179,19 @@ namespace Registration.Controllers
 
 
 
-        [HttpPut("Delete Course From Register For Student")]
+        [HttpPut("Delete Course From Register For Student{id}")]
 
-        public async Task<IActionResult> DeleteCourse([FromForm] DtoRegistrationStudent dtoRegistrationStudent)
+        public async Task<IActionResult> DeleteCourse(string id, [FromForm] DtoRegistrationStudent dtoRegistrationStudent)
         {
 
 
-            var StudentRegistration = await dbcontext.RegistrationStudent.SingleOrDefaultAsync(x => x.StudentId == dtoRegistrationStudent.StudentID);
+            var StudentRegistration = await dbcontext.RegistrationStudent.SingleOrDefaultAsync(x => x.StudentId == id);
 
             var course = await dbcontext.Courses.SingleOrDefaultAsync(x => x.CourseCode == dtoRegistrationStudent.CourseCode);
 
 
             var student = await dbcontext.student
-                      .SingleOrDefaultAsync(x => x.StudentId == dtoRegistrationStudent.StudentID);
+                      .SingleOrDefaultAsync(x => x.StudentId == id);
 
 
 
@@ -196,7 +199,7 @@ namespace Registration.Controllers
 
 
                 if (StudentRegistration.Course1 == dtoRegistrationStudent.CourseCode
-                &&StudentRegistration.StudentId==dtoRegistrationStudent.StudentID)
+                &&StudentRegistration.StudentId==id)
                 {
 
                 StudentRegistration.Course1 = null;
@@ -312,12 +315,12 @@ namespace Registration.Controllers
             }
 
 
-        [HttpGet("Return All Courses Registration By Student")]
-           public async Task<IActionResult> GetAllCoursesRegistration(string ID)
+        [HttpGet("getRegistration{id}")]
+           public async Task<IActionResult> GetAllCoursesRegistration(string id)
         {
             var Student = await dbcontext.RegistrationStudent
                 
-                .Where(x => x.StudentId == ID).ToListAsync();
+                .Where(x => x.StudentId == id).ToListAsync();
            
             return Ok(Student);
         }

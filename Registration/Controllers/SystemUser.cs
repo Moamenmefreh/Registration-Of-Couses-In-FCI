@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Registration.Data;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace RegistrationSystem.Controllers
 {
+    [Authorize(Roles ="Staff")]
     [Route("api/[controller]")]
     [ApiController]
     public class SystemUser : ControllerBase
@@ -22,7 +24,7 @@ namespace RegistrationSystem.Controllers
         {
             this.dbcontext = dbcontext;
         }
-        [HttpPost("AddAdmin")]
+        [HttpPost("AddAdmin{AdminUserName}")]
         public async Task<IActionResult> AddAdmin([FromForm] DtoAdmin dtoadmin)
         {
 
@@ -49,7 +51,7 @@ namespace RegistrationSystem.Controllers
 
         }
 
-        [HttpDelete("Delete_Admin")]
+        [HttpDelete("Delete_Admin{AdminUserName}")]
         public async Task<IActionResult> DeleteAdmin(string AdminUserName)
         {
             var Admin = await dbcontext.Admins.SingleOrDefaultAsync(x => x.AdminUserName == AdminUserName);

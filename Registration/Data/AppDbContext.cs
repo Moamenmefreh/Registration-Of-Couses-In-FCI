@@ -1,12 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Registration.Models;
 
 namespace Registration.Data
 {
-    public class AppDbContext:DbContext
+    public class AppDbContext:IdentityDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext>options)
             :base(options) { }
+        public DbSet<RefreshToken> RefreshToken { get; set; }
         public DbSet<Students>? student { get; set; } 
         public DbSet<Semster>? Semster { get; set; } 
         public DbSet<Semster1>? Semster1 { get; set; }
@@ -17,7 +20,7 @@ namespace Registration.Data
         public DbSet<Semster6>? Semster6 { get; set; }
         public DbSet<Semster7>? Semster7 { get; set; } = null;
         public DbSet<Semster8>? Semster8 { get; set; }
-
+        
         public DbSet<Levels>? Levels { get; set; } 
         public DbSet<Level1>? Level1 { get; set; } 
         public DbSet<Level2>? Level2 { get; set; } 
@@ -45,7 +48,22 @@ namespace Registration.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<IdentityUserLogin<string>>()
+     .HasNoKey();
+            modelBuilder.Entity<IdentityUserToken<string>>()
+       .HasNoKey();
+            modelBuilder.Entity<IdentityUserRole<string>>()
+       .HasNoKey();
+            modelBuilder.Entity<RefreshToken>(
+                e => {
+                    e.HasKey("UserId");
+                   
+                   
+               }
+                ) ;
+           
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+           
         }
 
     }

@@ -18,10 +18,10 @@ namespace Registration.Models
         public Levels Levels { get; set; } = null;
         [JsonIgnore]
         [IgnoreDataMember]
-        public RegistrationStudent RegistrationStudent { get; set; }
+        public RegistrationStudent? RegistrationStudent { get; set; }
 
-        public ICollection<Courses> Courses { get; set; }
-        public Department Department { get; set; }
+        public ICollection<Courses>? Courses { get; set; }
+        public Department? Department { get; set; }
         
     }
 }
